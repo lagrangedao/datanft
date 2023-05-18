@@ -1,0 +1,12 @@
+wallet_address = "0xc17ae0520803E715D020C03D29D452520D6aEbf9"
+private_key = "5c412d5f09c85ab2271cb5712dee9f87384321c6a87b750092502ba68cadc1d0"
+rpc_endpoint = "https://api.hyperspace.node.glif.io/rpc/v1"
+SQLALCHEMY_DATABASE_URI = "mysql+pymysql://user:pass@127.0.0.1:3306/lagrange"
+DOMAIN = "127.0.0.1"
+
+DB_HOST = "localhost"
+DB_USER = "root"
+DB_PASSWORD = "sql12345"
+DB_NAME = "nft_data"
+
+NFT_CONTRACT_ADDRESS = "0xfb7d4A9843479d3AB15436cE3920c9efedE3CD52"
