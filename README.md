@@ -1,6 +1,6 @@
-# Sample Hardhat Project
-
 # Data NFT
+
+A data NFT represents the copyright for a dataset on the Lagrange Platform.
 
 ## NFT Factory
 
