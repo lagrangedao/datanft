@@ -22,7 +22,7 @@ USE `nft_factory_data` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `nft_factory_data`.`factory_contract_details` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `last_scan_block` VARCHAR(50) NOT NULL,
+  `last_scan_block` INT NOT NULL,
   `factory_contract_address` VARCHAR(100) NOT NULL,
   `owner` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`id`))

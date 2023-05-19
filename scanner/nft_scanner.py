@@ -5,8 +5,8 @@ from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from hexbytes import HexBytes
-# from model.nft_data import NFTData,NFTContractDetails
-# from model import db
+from model.nft_factory_data import NFTFactoryTransactions,FactoryContractDetails
+from model import db
 
 import time
 import mysql.connector
@@ -37,29 +37,28 @@ class NFTScanner:
         self.nft_factory_abi_file_path = '../contracts/abi/DataNFTFactory.json'
 
         # DB connection
-        # self.engine = create_engine('mysql+mysqlconnector://' + config['DB_USER'] + ':' + config['DB_PASSWORD'] + '@localhost/nft_data')
-        # Session = sessionmaker(bind=self.engine)
-        # self.session = Session()
+        self.engine = create_engine('mysql+mysqlconnector://' + config['DB_USER'] + ':' + config['DB_PASSWORD'] + '@localhost/nft_factory_data')
+        Session = sessionmaker(bind=self.engine)
+        self.session = Session()
 
         self.w3 = Web3(Web3.HTTPProvider(rpc_url))
         self.w3.middleware_onion.inject(geth_poa_middleware, layer=0)
         self.nft_factory_abi = json.load(open(self.nft_factory_abi_file_path))
         
-        # try:
-        #     lastScannedBlock = self.session.query(NFTContractDetails.last_scan_block).first()
-        # except Exception as e:
-        #     logging.error("Error fetching the last_scan_block: ",e)
-        # finally:
-        #     self.session.close()
-        # print("lastScannedBlock: ",lastScannedBlock[0])
+        try:
+            lastScannedBlock = self.session.query(FactoryContractDetails.last_scan_block).first()
+        except Exception as e:
+            logging.error("Error fetching the last_scan_block: ",e)
+        finally:
+            self.session.close()
+        print("lastScannedBlock: ",lastScannedBlock[0])
 
-        # if lastScannedBlock:
-        #     self.from_block = lastScannedBlock[0] + 1
-        # else:
-        #     # Block at which the contracts were deployed
-        #     self.from_block = 34333512
+        if lastScannedBlock:
+            self.from_block = lastScannedBlock[0] + 1
+        else:
+            # Block at which the contracts were deployed
+            self.from_block = 353737
 
-        self.from_block = 353737
         self.batch_size = 1000
 
     # Function to update the ownership of the NFT or insert a newly minted NFT
