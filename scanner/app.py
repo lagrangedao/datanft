@@ -79,4 +79,4 @@ def get_factory_details():
    
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host=config['SERVER_HOST'], port=config['SERVER_PORT'])

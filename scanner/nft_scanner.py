@@ -37,7 +37,7 @@ class NFTFactoryScanner:
         self.nft_factory_abi_file_path = '../contracts/abi/DataNFTFactory.json'
 
         # DB connection
-        self.engine = create_engine('mysql+mysqlconnector://' + config['DB_USER'] + ':' + config['DB_PASSWORD'] + '@localhost/nft_factory_data')
+        self.engine = create_engine('mysql+mysqlconnector://' + config['DB_USER'] + ':' + config['DB_PASSWORD'] + '@' + config['DB_HOST'] + '/' + config['DB_NAME'] )
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
 
