@@ -12,3 +12,5 @@ artifacts
 # TOML files
 .toml
 .idea
+.venv
+.pyc

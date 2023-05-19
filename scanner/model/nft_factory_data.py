@@ -4,6 +4,7 @@ from scanner.model import Base
 
 class NFTFactoryTransactions(Base):
     __tablename__ = 'nft_factory_transactions'
+    __table_args__ = {'extend_existing': True}
     id = Column(Integer, primary_key=True)
     chain_id = Column(String)
     dataset_name = Column(String)
@@ -15,6 +16,7 @@ class NFTFactoryTransactions(Base):
 
 class FactoryContractDetails(Base):
     __tablename__ = 'factory_contract_details'
+    __table_args__ = {'extend_existing': True}
     id = Column(Integer, primary_key=True)
     chain_id = Column(String)
     last_scan_block = Column(Integer)
