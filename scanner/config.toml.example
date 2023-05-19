@@ -1,0 +1,9 @@
+SERVER_HOST = "0.0.0.0"
+SERVER_PORT = "51111"
+
+
+[database]
+host = "ip"
+user = "root"
+password = "***"
+name = "lagrange-scan"
