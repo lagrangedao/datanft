@@ -17,7 +17,7 @@ contract DataNFTFactory {
     address private implementation;
     mapping(address => mapping(string => address)) public dataNFTAddresses;
 
-    event CreateDataNFT(address indexed owner, string datasetName, address dataNFTAddress);
+    event CreateDataNFT(address indexed owner, string indexed datasetName, address dataNFTAddress);
 
     constructor() {
         implementation = address(new DataNFT());
