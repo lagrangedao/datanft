@@ -14,7 +14,7 @@
         "type": "address"
       },
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "string",
         "name": "datasetName",
         "type": "string"

@@ -15,7 +15,7 @@ async function main() {
   // connect contract address + abi
   const factory = new web3.eth.Contract(
     FACTORY_ABI,
-    '0xfb7d4A9843479d3AB15436cE3920c9efedE3CD52',
+    '0x5efC6f29eAab0a744E65D07ca21ba9a3E247F35E',
   )
 
   // dataset name from lagrange
