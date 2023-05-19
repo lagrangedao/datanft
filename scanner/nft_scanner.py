@@ -58,11 +58,11 @@ class NFTFactoryScanner:
             block_diff = target_block - self.from_block
             if block_diff < self.batch_size:
                 self.batch_size = block_diff
+            update_last_scan_block(session, self.chain_ID, to_block)
             time.sleep(1)
-        update_last_scan_block(session, self.chain_ID, target_block)
 
 
-def main():
+def scan_chain():
     all_chain = find_all_chain_list(session)
     for chain_info in all_chain:
         scanner_obj = NFTFactoryScanner(chain_info)
@@ -71,4 +71,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    scan_chain()

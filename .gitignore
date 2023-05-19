@@ -12,6 +12,10 @@ artifacts
 # TOML files
 .toml
 .idea
+
+.venv
+.pyc
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -148,3 +152,4 @@ prod-server.sh
 .env
 .idea/
 .idea/vcs.xml
+

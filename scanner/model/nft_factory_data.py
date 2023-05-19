@@ -4,6 +4,7 @@ from scanner.model import Base
 
 class NFTFactoryTransactions(Base):
     __tablename__ = 'nft_factory_transactions'
+    __table_args__ = {'extend_existing': True}
     id = Column(Integer, primary_key=True)
     chain_id = Column(String)
     dataset_name = Column(String)
@@ -15,6 +16,7 @@ class NFTFactoryTransactions(Base):
 
 class FactoryContractDetails(Base):
     __tablename__ = 'factory_contract_details'
+    __table_args__ = {'extend_existing': True}
     id = Column(Integer, primary_key=True)
     chain_id = Column(String)
     last_scan_block = Column(Integer)
@@ -53,8 +55,6 @@ def insert_dataset_nft_transaction(session, chain_id, dataset_name, data_NFT_add
         session.close()
 
 
-
-
 # Update last scanned block
 def update_last_scan_block(session, chain_id, last_scan_block):
     try:
@@ -62,5 +62,17 @@ def update_last_scan_block(session, chain_id, last_scan_block):
         session.commit()
     except Exception as e:
         print("Error updating the last_scan_block: ", e)
+    finally:
+        session.close()
+
+
+## get nft_factory_transactions by chain_id and transaction_hash
+def get_nft_factory_transactions(session, chain_id, transaction_hash):
+    try:
+        nft_factory_transactions = session.query(NFTFactoryTransactions).filter_by(chain_id=chain_id,
+                                                                                   transaction_hash=transaction_hash).first()
+        return nft_factory_transactions
+    except Exception as e:
+        print("Error fetching the nft_factory_transactions: ", e)
     finally:
         session.close()
