@@ -15,15 +15,16 @@ async function main() {
   // connect contract address + abi
   const factory = new web3.eth.Contract(
     FACTORY_ABI,
-    '0x5efC6f29eAab0a744E65D07ca21ba9a3E247F35E',
+    '0x93C2aB6d92b3d40DEcf3eaFEA2B8b539EE78738e',
   )
 
-  // dataset name from lagrange
+  // dataset name and uri from lagrange
   let datasetName = 'dataset123'
+  let uri = 'ipfs.io/ipfs/Qm...'
 
   // estimate gas
   let estimatedGas = await factory.methods
-    .claimDataNFT(datasetName)
+    .claimDataNFT(datasetName, uri)
     .estimateGas({ from: caller })
 
   // we will use estimated gas * 1.5
@@ -35,7 +36,7 @@ async function main() {
   // call contract
   console.log('Deploying Data NFT...')
   const tx = await factory.methods
-    .claimDataNFT(datasetName)
+    .claimDataNFT(datasetName, uri)
     .send({ from: caller, gasLimit: gasLimit })
 
   // display results

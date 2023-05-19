@@ -27,10 +27,11 @@ contract DataNFTFactory {
      * @dev TODO, not sure if I should use requestID or metadataURL
      */
     function claimDataNFT(
-        string memory datasetName
+        string memory datasetName,
+        string memory uri
     ) public {
         address clone = Clones.clone(implementation);
-        DataNFT(clone).initialize(msg.sender, datasetName);
+        DataNFT(clone).initialize(msg.sender, datasetName, uri);
 
         dataNFTAddresses[msg.sender][datasetName] = clone;
 

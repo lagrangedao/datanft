@@ -35,6 +35,11 @@
         "internalType": "string",
         "name": "datasetName",
         "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "uri",
+        "type": "string"
       }
     ],
     "name": "claimDataNFT",
