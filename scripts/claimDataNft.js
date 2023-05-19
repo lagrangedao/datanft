@@ -2,6 +2,7 @@ require('dotenv').config()
 const Web3 = require('web3')
 const FEVM_HYPERSPACE_URL = 'https://api.hyperspace.node.glif.io/rpc/v1'
 const FACTORY_ABI = require('../DataNFTFactory.json')
+const FACTORY_ADDRESS = '0x93C2aB6d92b3d40DEcf3eaFEA2B8b539EE78738e'
 
 async function main() {
   // connect web3
@@ -13,10 +14,7 @@ async function main() {
     .address
 
   // connect contract address + abi
-  const factory = new web3.eth.Contract(
-    FACTORY_ABI,
-    '0x93C2aB6d92b3d40DEcf3eaFEA2B8b539EE78738e',
-  )
+  const factory = new web3.eth.Contract(FACTORY_ABI, FACTORY_ADDRESS)
 
   // dataset name and uri from lagrange
   let datasetName = 'dataset123'
