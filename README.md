@@ -10,23 +10,25 @@ A Data NFT represents the copyright for a data asset on the blockchain. The owne
 
 This project establishes ownership of data assets, which would allow for data transferability and data sales while maintaining a verifiable record of ownership. It also allows data owners to define who can access the data, for what purposes, and under what conditions, in order to protect their own intellectual property.
 
+## Workflow 🧩
+
+- Users onboard their data onto Lagrange Platform
+- Generate dataNFT on frontend
+- Backend will generate metadata
+- Frontend will call smart contract to claimDataNFT
+- User will sign the transaction on MetaMask
+- After the transaction is complete, frontend displays information about the dataNFT
+
 ## Technologies Used 🛠
 
 - The frontend was written in Vue.js
-
 - The backend was writting in Python
-
 - DataNFTs are created on the Filecoin Hyperspace Testnet, utilizing FEVM technology.
-
   - DataNFT Factory contract address: `0x93C2aB6d92b3d40DEcf3eaFEA2B8b539EE78738e`
 
-## Future Enhancements: 🔮
-
-We want to allow users to sub-license their data assets to other wallet addresses, effectively giving those users permission to access the asset according to the terms in the sub-license. Different sub-licenses would define different usage and duration.
-
-In the future we plan to integrate Chainlink Functions into our contracts to setup Lagrange DAO to be a data validator. We want to make sure users own the data they are minting as dataNFTs/
-
 ## Deploying Contracts 📜
+
+For those interested on deploying their own DataNFTFactory contract:
 
 Clone the repository:
 
@@ -61,6 +63,12 @@ Then run the script to create an example Data NFT:
 ```bash
 node scripts/createDataNft.js
 ```
+
+## Future Enhancements: 🔮
+
+We want to allow users to sub-license their data assets to other wallet addresses, effectively giving those users permission to access the asset according to the terms in the sub-license. Different sub-licenses would define different usage and duration.
+
+In the future we plan to integrate Chainlink Functions into our contracts to setup Lagrange DAO to be a data validator. We want to make sure users own the data they are minting as dataNFTs/
 
 ## Contributing 🤝
 
