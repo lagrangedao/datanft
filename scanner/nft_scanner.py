@@ -59,7 +59,7 @@ class NFTScanner:
         #     # Block at which the contracts were deployed
         #     self.from_block = 34333512
 
-        self.from_block = 352590
+        self.from_block = 353737
         self.batch_size = 1000
 
     # Function to update the ownership of the NFT or insert a newly minted NFT
@@ -119,7 +119,7 @@ class NFTScanner:
                         print("transactionHash: ",createDataNFT_events[i].transactionHash.hex())
                         print("owner: ",createDataNFT_events[i].args.owner)
                         print("address: ",createDataNFT_events[i].address)
-                        print("dataset Name: ",createDataNFT_events[i].args.datasetName.hex())
+                        print("dataset Name: ",createDataNFT_events[i].args.datasetName)
                         print("dataNFTAddress: ",createDataNFT_events[i].args.dataNFTAddress)
 
                     blocknumInit = createDataNFT_events[i].blockNumber
