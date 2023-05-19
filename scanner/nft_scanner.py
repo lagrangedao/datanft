@@ -28,7 +28,7 @@ logging.getLogger('').addHandler(console)
 config=toml.load('config.toml')
 rpc_url = config['rpc_endpoint']
 
-class NFTScanner:
+class NFTFactoryScanner:
     def __init__(self, nft_factory_contract_address):
         # Data NFT with Chainlink functions contract address
         self.nft_factory_contract_address = nft_factory_contract_address
@@ -147,7 +147,7 @@ def main():
 
     # Start scanner:
     try:
-        scanner_0bj = NFTScanner(nft_factory_contract_addr)
+        scanner_0bj = NFTFactoryScanner(nft_factory_contract_addr)
         target_block = 	scanner_0bj.w3.eth.get_block('latest')
         scanner_0bj.start_NFT_scan(target_block.number)
     except Exception as e:
