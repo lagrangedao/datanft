@@ -51,48 +51,41 @@ class NFTScanner:
             logging.error("Error fetching the last_scan_block: ",e)
         finally:
             self.session.close()
-        print("lastScannedBlock: ",lastScannedBlock[0])
 
         if lastScannedBlock:
             self.from_block = lastScannedBlock[0] + 1
         else:
-            # Block at which the contracts were deployed
+            # Block at which the fatory contract was deployed
             self.from_block = 353737
 
         self.batch_size = 1000
 
     # Function to update the ownership of the NFT or insert a newly minted NFT
-    # def update_or_insert_nft(self, blockNumber, to, contract_address, token_id):
-    #     try:
-    #         Session = sessionmaker(bind=self.engine)
-    #         self.session = Session()
-    #     except Exception as e:
-    #         logging.error("Error creating a new session: ",e)
+    def insert_nft_contract_deails(self, _datasetName, _dataNFTaddress, _owner, _transactionhash, _contractAddress):
+        try:
+            Session = sessionmaker(bind=self.engine)
+            self.session = Session()
+        except Exception as e:
+            logging.error("Error creating a new session: ",e)
 
-    #     try:
-    #         nft_ownership = self.session.query(NFTData).filter_by(nft_address=contract_address, nft_ID=token_id).first()
+        try:
+            # Insert new NFT details
+            nft_contract_tx = NFTFactoryTransactions(
+                dataset_name= _datasetName,
+                data_NFT_address= _dataNFTaddress,
+                owner=_owner,
+                transaction_hash=_transactionhash,
+                contract_address=_contractAddress
+            )
 
-    #         if nft_ownership:
-    #             # Update the NFT details
-    #             nft_ownership.transfer_event_block = blockNumber
-    #             nft_ownership.owner_address = to
-    #         else:
-    #             # Insert new NFT details
-    #             nft_ownership = NFTData(
-    #                 transfer_event_block=blockNumber,
-    #                 owner_address=to,
-    #                 nft_address=contract_address,
-    #                 nft_ID=token_id
-    #             )
-
-    #         self.session.add(nft_ownership)
-    #         self.session.commit()
-    #         return True
-    #     except Exception as e:
-    #         logging.error("Error updating NFT ownership: ", e)
-    #         return False
-    #     finally:
-    #         self.session.close()
+            self.session.add(nft_contract_tx)
+            self.session.commit()
+            return True
+        except Exception as e:
+            logging.error("Error updating NFT ownership: ", e)
+            return False
+        finally:
+            self.session.close()
 
     def start_NFT_scan(self, target_block):
         while self.from_block < target_block:
@@ -115,11 +108,13 @@ class NFTScanner:
 
                 while i < event_size:
                     if blocknumInit != createDataNFT_events[i].blockNumber:
-                        print("transactionHash: ",createDataNFT_events[i].transactionHash.hex())
-                        print("owner: ",createDataNFT_events[i].args.owner)
-                        print("address: ",createDataNFT_events[i].address)
-                        print("dataset Name: ",createDataNFT_events[i].args.datasetName)
-                        print("dataNFTAddress: ",createDataNFT_events[i].args.dataNFTAddress)
+                        self.insert_nft_contract_deails(
+                            createDataNFT_events[i].args.datasetName,
+                            createDataNFT_events[i].args.dataNFTAddress,
+                            createDataNFT_events[i].args.owner,
+                            createDataNFT_events[i].transactionHash.hex(),
+                            createDataNFT_events[i].address
+                        )
 
                     blocknumInit = createDataNFT_events[i].blockNumber
                     i=i+1
@@ -131,15 +126,15 @@ class NFTScanner:
                 self.batch_size = blockDiff
 
         # Update last scanned block
-        # try:
-        #     Session = sessionmaker(bind=self.engine)
-        #     self.session = Session()
-        #     self.session.query(NFTContractDetails).update({'last_scan_block': target_block})
-        #     self.session.commit()
-        # except Exception as e:
-        #     logging.error("Error updating the last_scan_block: ",e)
-        # finally:
-        #     self.session.close()
+        try:
+            Session = sessionmaker(bind=self.engine)
+            self.session = Session()
+            self.session.query(FactoryContractDetails).update({'last_scan_block': target_block})
+            self.session.commit()
+        except Exception as e:
+            logging.error("Error updating the last_scan_block: ",e)
+        finally:
+            self.session.close()
 
 def main():
     # Configurable parameters:
