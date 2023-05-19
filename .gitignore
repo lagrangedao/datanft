@@ -11,4 +11,4 @@ artifacts
 
 # TOML files
 .toml
-
+.idea
