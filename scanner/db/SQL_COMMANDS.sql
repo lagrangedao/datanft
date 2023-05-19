@@ -22,6 +22,7 @@ USE `nft_factory_data` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `nft_factory_data`.`factory_contract_details` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `chain_id` VARCHAR(10) NOT NULL,
   `last_scan_block` INT NOT NULL,
   `factory_contract_address` VARCHAR(100) NOT NULL,
   `owner` VARCHAR(100) NOT NULL,
@@ -36,6 +37,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `nft_factory_data`.`nft_factory_transactions` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `chain_id` VARCHAR(10) NOT NULL,
   `dataset_name` VARCHAR(100) NOT NULL,
   `data_NFT_address` VARCHAR(100) NOT NULL,
   `owner` VARCHAR(100) NOT NULL,

@@ -61,7 +61,7 @@ class NFTScanner:
         self.batch_size = 1000
 
     # Function to update the ownership of the NFT or insert a newly minted NFT
-    def insert_nft_contract_deails(self, _datasetName, _dataNFTaddress, _owner, _transactionhash, _contractAddress):
+    def insert_nft_contract_deails(self, _chain_ID, _datasetName, _dataNFTaddress, _owner, _transactionhash, _contractAddress):
         try:
             Session = sessionmaker(bind=self.engine)
             self.session = Session()
@@ -71,6 +71,7 @@ class NFTScanner:
         try:
             # Insert new NFT details
             nft_contract_tx = NFTFactoryTransactions(
+                chain_id= _chain_ID,
                 dataset_name= _datasetName,
                 data_NFT_address= _dataNFTaddress,
                 owner=_owner,
@@ -88,6 +89,7 @@ class NFTScanner:
             self.session.close()
 
     def start_NFT_scan(self, target_block):
+        chain_ID = self.w3.eth.chain_id
         while self.from_block < target_block:
             warnings.filterwarnings("ignore")
 
@@ -102,13 +104,13 @@ class NFTScanner:
             # Scan for contract with Chainlink functions events
             if createDataNFT_events:
                 event_size = len(createDataNFT_events)
-                print("event_size: ",event_size)
                 i = 0
                 blocknumInit = 0
 
                 while i < event_size:
                     if blocknumInit != createDataNFT_events[i].blockNumber:
                         self.insert_nft_contract_deails(
+                            chain_ID,
                             createDataNFT_events[i].args.datasetName,
                             createDataNFT_events[i].args.dataNFTAddress,
                             createDataNFT_events[i].args.owner,
