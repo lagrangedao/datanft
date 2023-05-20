@@ -35,6 +35,9 @@ class NFTFactoryScanner:
     def start_NFT_scan(self, target_block):
         logging.info("Scanning for NFT Factory contract events")
         while self.from_block < target_block:
+            block_diff = target_block - self.from_block
+            if block_diff < self.batch_size:
+                self.batch_size = block_diff
             to_block = self.from_block + self.batch_size
             logging.info(f"scanning from {self.from_block} to {to_block}")
             nft_factory_contract = self.w3.eth.contract(
@@ -54,11 +57,8 @@ class NFTFactoryScanner:
                                                    even.transactionHash.hex(),
                                                    even.address
                                                    )
-            self.from_block = self.from_block + self.batch_size + 1
-            block_diff = target_block - self.from_block
-            if block_diff < self.batch_size:
-                self.batch_size = block_diff
             update_last_scan_block(session, self.chain_ID, to_block)
+            self.from_block = self.from_block + self.batch_size + 1
             time.sleep(1)
 
 
