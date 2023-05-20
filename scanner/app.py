@@ -5,6 +5,7 @@ from scanner.model import getDb
 from apscheduler.schedulers.background import BackgroundScheduler
 from scanner.nft_scanner import scan_chain
 from datetime import datetime
+
 config = getConfig()
 session = getDb()
 app = Flask(__name__)
@@ -24,7 +25,7 @@ def get_factory_details():
     transaction_hash = request.args.get('transaction_hash')
     chain_id = request.args.get('chain_id')
     print(transaction_hash, chain_id)
-    result = get_nft_factory_transactions(session, transaction_hash, chain_id)
+    result = get_nft_factory_transactions(session, chain_id, transaction_hash)
     if result:
         return {'chain_id': result.chain_id,
                 'dataset_name': result.dataset_name,
