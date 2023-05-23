@@ -24,20 +24,29 @@ This project would enable the tokenization of the base intellectual property, al
 Here is a simple flow chart:
 
 ```mermaid
-graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
+sequenceDiagram;
+  participant User
+  participant Frontend
+  participant Backend
+  participant Contract
+    User->>Frontend: Upload data asset to Lagrange Platform;
+    Frontend-->>Backend: Handle data upload
+    User->>Frontend: Request DataNFT Generation
+    Backend->>Frontend: Generate Data NFT Metadata
+    Frontend->>Contract: claimDataNFT(datasetName, metadataUri)
+    Backend-->>Contract: Scan transaction
+    Frontend->>User: Display Data NFT information
 ```
 
 ## Technologies Used 🛠
 
 - The frontend was written in Vue.js
-- The backend was writting in Python
-- DataNFTs are created on the Filecoin Hyperspace Testnet, utilizing FEVM technology.
+- The backend was written in Python
+- The Data NFTs are implemented using the ERC721 standard. Built on top of the widely-used OpenZeppelin contract library and deployed on the Filecoin Hyperspace Testnet, utilizing FEVM technology.
+
   - DataNFT Factory contract address: `0x93C2aB6d92b3d40DEcf3eaFEA2B8b539EE78738e`
 
+<!--
 ## Deploying Contracts 📜
 
 For those interested on deploying their own DataNFTFactory contract:
@@ -74,7 +83,7 @@ Then run the script to create an example Data NFT:
 
 ```bash
 node scripts/createDataNft.js
-```
+``` -->
 
 ## Future Enhancements: 🔮
 
