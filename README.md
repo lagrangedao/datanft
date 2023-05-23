@@ -14,27 +14,26 @@ This project would enable the tokenization of the base intellectual property, al
 
 ## Workflow 🧩
 
-- Users onboard their data onto Lagrange Platform
-- Generate dataNFT on frontend
-- Backend will generate metadata
-- Frontend will call smart contract to claimDataNFT
-- User will sign the transaction on MetaMask
-- After the transaction is complete, frontend displays information about the dataNFT
-
-Here is a simple flow chart:
-
 ```mermaid
 sequenceDiagram;
   participant User
   participant Lagrange Platform
   participant Smart Contract
-    User->>Lagrange Platform: Upload data asset;
-    User->>Lagrange Platform: Request DataNFT Generation
-    Lagrange Platform->>Lagrange Platform: Generate Data NFT Metadata
-    Lagrange Platform->>Smart Contract: claimDataNFT(datasetName, metadataUri)
-    Lagrange Platform-->>Smart Contract: Scan transaction
-    Lagrange Platform->>User: Display Data NFT information
+    User->>Lagrange Platform: 1. Upload data asset;
+    User->>Lagrange Platform: 2. Request DataNFT Generation
+    Lagrange Platform->>Lagrange Platform: 3. Generate Data NFT Metadata
+    Lagrange Platform->>Smart Contract: 4. claimDataNFT(datasetName, metadataUri)
+    Lagrange Platform-->>Smart Contract: 5. Scan transaction
+    Lagrange Platform->>User: 6. Display Data NFT information
 ```
+
+1. Users onboard their data onto Lagrange Platform
+2. Users click Generate dataNFT button on frontend
+3. Backend will generate NFT metadata
+4. Frontend will call smart contract function to create dataNFT
+   1. User will sign the transaction on MetaMask
+5. Backend will scan network for the transaction
+6. frontend displays information about the dataNFT
 
 ## Technologies Used 🛠
 
@@ -87,7 +86,7 @@ node scripts/createDataNft.js
 
 We want to allow users to sub-license their data assets to other wallet addresses, effectively giving those users permission to access the asset according to the terms in the sub-license. Different sub-licenses would define different usage and duration.
 
-In the future we plan to integrate Chainlink Functions into our contracts to setup Lagrange DAO to be a data validator. We want to make sure users own the data they are minting as dataNFTs/
+In the future we plan to integrate Chainlink Functions into our contracts to setup Lagrange DAO to be a data validator. We want to make sure users own the data they are minting as dataNFTs.
 
 ## Contributing 🤝
 
