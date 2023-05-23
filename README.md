@@ -31,8 +31,8 @@ sequenceDiagram;
     User->>Lagrange Platform: Upload data asset;
     User->>Lagrange Platform: Request DataNFT Generation
     Lagrange Platform->>Lagrange Platform: Generate Data NFT Metadata
-    Frontend->>Smart Contract: claimDataNFT(datasetName, metadataUri)
-    Lagrange Platform-->Smart Contract: Scan transaction
+    Lagrange Platform->>Smart Contract: claimDataNFT(datasetName, metadataUri)
+    Lagrange Platform-->>Smart Contract: Scan transaction
     Lagrange Platform->>User: Display Data NFT information
 ```
 
