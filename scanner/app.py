@@ -14,9 +14,7 @@ app = Flask(__name__)
 def initialize_scheduler():
     scheduler = BackgroundScheduler()
     scheduler.add_job(func=scan_chain, trigger='date', next_run_time=datetime.now())
-    scheduler.add_job(func=scan_chain, trigger='cron',
-                      minute='*/30',
-                      hour='*')
+    scheduler.add_job(func=scan_chain, trigger='interval', seconds=30)
     scheduler.start()
 
 
