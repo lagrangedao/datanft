@@ -2,13 +2,15 @@
 
 https://www.lagrangedao.org/
 
-## Project Description ℹ️
-
 DataNFT for Dataset Licensing is a platform that allows dataset owners to tokenize their datasets uploaded on the Lagrange Platform and grant access to others users via NFTs. It utilizes blockchain technology to validate ownership and access rights, ensuring a secure and transparent ecosystem.
 
-A Data NFT represents the copyright for a data asset on the blockchain. The owner has the claim on the base intellectual property and can distribute sub-licenses to other users, giving them permission to access the data.
+## What is a Data NFT? 🤔
+
+A Data NFT represents the ownership and rights for a specific data asset on the blockchain. The owner has the claim on the base intellectual property and can distribute sub-licenses to other users, giving them permission to access the data.
 
 This project establishes ownership of data assets, which would allow for data transferability and data sales while maintaining a verifiable record of ownership. It also allows data owners to define who can access the data, for what purposes, and under what conditions, in order to protect their own intellectual property.
+
+This project would enable the tokenization of the base intellectual property, allows for easy transfer and trade of ownership, and provides opportunities for revenue generation through the creation and sale of datatokens associated with the underlying data. Data NFTs also maintain a verifiable record of ownership. It also allows data owners to define who can access the data, for what purposes, and under what conditions, in order to protect their own intellectual property.
 
 ## Workflow 🧩
 
@@ -18,6 +20,16 @@ This project establishes ownership of data assets, which would allow for data tr
 - Frontend will call smart contract to claimDataNFT
 - User will sign the transaction on MetaMask
 - After the transaction is complete, frontend displays information about the dataNFT
+
+Here is a simple flow chart:
+
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
 
 ## Technologies Used 🛠
 
