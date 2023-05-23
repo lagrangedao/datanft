@@ -26,16 +26,14 @@ Here is a simple flow chart:
 ```mermaid
 sequenceDiagram;
   participant User
-  participant Frontend
-  participant Backend
-  participant Contract
-    User->>Frontend: Upload data asset to Lagrange Platform;
-    Frontend-->>Backend: Handle data upload
+  participant Lagrange Platform
+  participant Smart Contract
+    User->>Frontend: Upload data asset;
     User->>Frontend: Request DataNFT Generation
-    Backend->>Frontend: Generate Data NFT Metadata
-    Frontend->>Contract: claimDataNFT(datasetName, metadataUri)
-    Backend-->>Contract: Scan transaction
-    Frontend->>User: Display Data NFT information
+    Lagrange Platform->>Lagrange Platform: Generate Data NFT Metadata
+    Frontend->>Smart Contract: claimDataNFT(datasetName, metadataUri)
+    Backend-->Smart Contract: Scan transaction
+    Lagrange Platform->>User: Display Data NFT information
 ```
 
 ## Technologies Used 🛠
