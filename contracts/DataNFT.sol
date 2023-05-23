@@ -2,12 +2,13 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import "./DataToken.sol";
 
-contract DataNFT is Initializable, ERC721Upgradeable, OwnableUpgradeable {
+contract DataNFT is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeable, OwnableUpgradeable {
     using CountersUpgradeable for CountersUpgradeable.Counter;
     CountersUpgradeable.Counter private _tokenIdCounter;
 
@@ -29,23 +30,27 @@ contract DataNFT is Initializable, ERC721Upgradeable, OwnableUpgradeable {
     }
 
     // factory should initialize contract
-    function initialize(address owner, string memory name) initializer public {
+    function initialize(address owner, string memory name, string memory uri) initializer public {
         __ERC721_init(name, "DATA");
+        __ERC721URIStorage_init();
         __Ownable_init();
 
         factory = msg.sender;
         transferOwnership(owner);
+
+        mint(owner, uri);
     }
 
     /**
      * @notice creates a new version for the dataset, sub-licensed to recipient
      * @param recipient - sub-licensee
      */
-    function mint(address recipient) public onlyAdmin {
+    function mint(address recipient, string memory uri) public onlyAdmin {
         _tokenIdCounter.increment();
         uint256 tokenId = _tokenIdCounter.current();
 
         _safeMint(recipient, tokenId);
+        _setTokenURI(tokenId, uri);
     }
 
     /**
@@ -65,5 +70,23 @@ contract DataNFT is Initializable, ERC721Upgradeable, OwnableUpgradeable {
 
     function totalSupply() public view returns (uint) {
         return _tokenIdCounter.current();
+    }
+
+    // The following functions are overrides required by Solidity.
+
+    function _burn(uint256 tokenId)
+        internal
+        override(ERC721Upgradeable, ERC721URIStorageUpgradeable)
+    {
+        super._burn(tokenId);
+    }
+
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        override(ERC721Upgradeable, ERC721URIStorageUpgradeable)
+        returns (string memory)
+    {
+        return super.tokenURI(tokenId);
     }
 }
