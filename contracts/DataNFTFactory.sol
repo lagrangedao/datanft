@@ -24,6 +24,7 @@ contract DataNFTFactory is FunctionsClient, Ownable {
 
     struct RequestData {
         address requestor;
+        string dataName;
         string uri;
         bool fulfilled;
         bool claimable;
@@ -49,17 +50,13 @@ contract DataNFTFactory is FunctionsClient, Ownable {
 
     /**
      * 
-     * @param metadataUri IPFS URL for the dataset info. should be JSON containing:
-     * - name
-     * - symbol
-     * - datasetUrl
-     * - license
+     * @param datasetName name of data asset on Lagrange
      * @notice sends a request to Chainlink to verify the metadata, allowing the user to claim
      */
-    function requestDataNFT(string memory metadataUri) public returns (bytes32) {
+    function requestDataNFT(string memory datasetName) public returns (bytes32) {
         string[] memory args = new string[](2);
         args[0] = addressToString(msg.sender);
-        args[1] = metadataUri;
+        args[1] = datasetName;
 
         // sends the chainlink request to call API, returns reqID
         Functions.Request memory req;
@@ -70,7 +67,7 @@ contract DataNFTFactory is FunctionsClient, Ownable {
         // stores the req info in the mapping (we need to access this info to mint later)
         RequestData storage data = requestData[assignedReqID];
         data.requestor = msg.sender;
-        data.uri = metadataUri;
+        data.dataName = datasetName;
 
         return assignedReqID;
     }
@@ -88,12 +85,16 @@ contract DataNFTFactory is FunctionsClient, Ownable {
         bytes memory response,
         bytes memory err
     ) internal override {
-        if (true /* check if response */) {
-            requestData[requestId].claimable = true;
-        }
 
-         // update requestData information
+        // update requestData information
         requestData[requestId].fulfilled = true;
+
+        if (response.length > 0 /* check if response */) {
+            requestData[requestId].claimable = true;
+            requestData[requestId].uri = abi.decode(response, (string));
+
+            claimDataNFT(requestData[requestId].dataName, requestData[requestId].uri);
+        }
 
         emit OCRResponse(requestId, response, err);
     }
@@ -138,5 +139,13 @@ contract DataNFTFactory is FunctionsClient, Ownable {
     function updateOracleAddress(address oracle) public onlyOwner {
         oracleAddress = oracle;
         setOracle(oracle);
+    }
+
+    function updateSubscriptionId(uint64 subId) public onlyOwner {
+        subscriptionId = subId;
+    }
+
+    function updateSource(string memory _source) public onlyOwner {
+        source = _source;
     }
 }
