@@ -6,11 +6,11 @@ async function main() {
   // console.log('deployer: ', deployer.address)
 
   const subID = network.config.subid
-  const source = fs.readFileSync('./functions-source.js').toString()
+  const source = fs.readFileSync('./test-source.js').toString()
   const sepoliaOracle = network.config.oracle
 
   console.log('deploying...')
-  const nftFactory = await ethers.getContractFactory('DataNFTFactory')
+  const nftFactory = await ethers.getContractFactory('Test')
   const nftContract = await nftFactory.deploy(sepoliaOracle, subID, source)
 
   console.log('address: ' + nftContract.address)
