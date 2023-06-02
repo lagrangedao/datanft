@@ -21,16 +21,23 @@ contract DataNFTFactory is FunctionsClient, Ownable {
     address public oracleAddress;
 
     address private implementation;
+    bytes private secret;
 
     struct RequestData {
         address requestor;
-        string dataName;
+        string datasetName;
         string uri;
         bool fulfilled;
         bool claimable;
     }
 
-    mapping(bytes32 => RequestData) public requestData;
+    struct RequestArguements {
+        address requestor;
+        string datasetName;
+    }
+
+    mapping(bytes32 => RequestArguements) public idToArgs;
+    mapping(address => mapping(string => RequestData)) public requestData;
     mapping(address => mapping(string => address)) public dataNFTAddresses;
 
     event OCRResponse(bytes32 indexed requestId, bytes result, bytes err);
@@ -62,12 +69,14 @@ contract DataNFTFactory is FunctionsClient, Ownable {
         Functions.Request memory req;
         req.initializeRequestForInlineJavaScript(source);
         req.addArgs(args);
+        req.addRemoteSecrets(secret);
         bytes32 assignedReqID = sendRequest(req, subscriptionId, 300000);
 
         // stores the req info in the mapping (we need to access this info to mint later)
-        RequestData storage data = requestData[assignedReqID];
+        idToArgs[assignedReqID] = RequestArguements(msg.sender, datasetName);
+        RequestData storage data = requestData[msg.sender][datasetName];
         data.requestor = msg.sender;
-        data.dataName = datasetName;
+        data.datasetName = datasetName;
 
         return assignedReqID;
     }
@@ -85,35 +94,28 @@ contract DataNFTFactory is FunctionsClient, Ownable {
         bytes memory response,
         bytes memory err
     ) internal override {
+        RequestArguements memory args = idToArgs[requestId];
+        RequestData storage data = requestData[args.requestor][args.datasetName];
 
-        // update requestData information
-        requestData[requestId].fulfilled = true;
+        data.fulfilled = true;
 
-        if (response.length > 0 /* check if response */) {
-            requestData[requestId].claimable = true;
-            requestData[requestId].uri = abi.decode(response, (string));
-
-            claimDataNFT(requestData[requestId].dataName, requestData[requestId].uri);
+        if (response.length > 0) {
+            data.uri = string(response);
+            data.claimable = true;
         }
 
         emit OCRResponse(requestId, response, err);
     }
 
-    /**
-     * @dev TODO, not sure if I should use requestID or metadataURL
-     */
-    function claimDataNFT(
-        string memory datasetName,
-        string memory uri
-    ) public {
+    function claimDataNFT(string memory datasetName) public {
+        RequestData storage data = requestData[msg.sender][datasetName];
+        require(data.claimable, "this dataNFT is not claimable yet");
         address clone = Clones.clone(implementation);
-        DataNFT(clone).initialize(msg.sender, datasetName, uri);
+        DataNFT(clone).initialize(data.requestor, data.datasetName, data.uri);
 
-        dataNFTAddresses[msg.sender][datasetName] = clone;
-
-        emit CreateDataNFT(msg.sender, datasetName, clone);
+        dataNFTAddresses[data.requestor][data.datasetName] = clone;
+        emit CreateDataNFT(data.requestor, data.datasetName, clone);
     }
-
 
     function addressToString(
         address _address
@@ -130,6 +132,7 @@ contract DataNFTFactory is FunctionsClient, Ownable {
         }
         return string(_stringBytes);
     }
+    
 
     /**
      * @notice Allows the Functions oracle address to be updated
@@ -147,5 +150,9 @@ contract DataNFTFactory is FunctionsClient, Ownable {
 
     function updateSource(string memory _source) public onlyOwner {
         source = _source;
+    }
+
+    function updateSecret(bytes memory newSecret) public onlyOwner {
+        secret = newSecret;
     }
 }

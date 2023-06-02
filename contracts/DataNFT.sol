@@ -38,14 +38,14 @@ contract DataNFT is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeabl
         factory = msg.sender;
         transferOwnership(owner);
 
-        mint(owner, uri);
+        createLicense(owner, uri);
     }
 
     /**
      * @notice creates a new version for the dataset, sub-licensed to recipient
      * @param recipient - sub-licensee
      */
-    function mint(address recipient, string memory uri) public onlyAdmin {
+    function createLicense(address recipient, string memory uri) public onlyAdmin {
         _tokenIdCounter.increment();
         uint256 tokenId = _tokenIdCounter.current();
 

@@ -12,7 +12,7 @@ const req = Functions.makeHttpRequest({
 const res = await req
 if (res.error) {
   console.error(res.error)
-  throw Error('Request failed')
+  throw Error(`Request failed: ${requester}, ${datasetName}, ${secrets.apiKey}`)
 }
 
 const data = res['data']
@@ -25,4 +25,4 @@ if (data.ipfs_url == null) {
   throw Error(data.message)
 }
 
-return Functions.encodeString(JSON.stringify(data.ipfs_url))
+return Functions.encodeString(data.ipfs_url)
