@@ -19,29 +19,32 @@ sequenceDiagram;
   participant User
   participant Lagrange Platform
   participant Smart Contract
+  participant DON
     User->>Lagrange Platform: 1. Upload data asset;
     User->>Lagrange Platform: 2. Request DataNFT Generation
-    Lagrange Platform->>Lagrange Platform: 3. Generate Data NFT Metadata
-    Lagrange Platform->>Smart Contract: 4. claimDataNFT(datasetName, metadataUri)
-    Lagrange Platform-->>Smart Contract: 5. Scan transaction
-    Lagrange Platform->>User: 6. Display Data NFT information
+    Lagrange Platform->>Smart Contract: 3. claimDataNFT(datasetName, metadataUri)
+    Smart Contract->>DON: 4. Generate Metadata on IPFS
+    DON->>Smart Contract: 5. Returns CID
+    Smart Contract->>Smart Contract: 6. Creates New Data NFT
 ```
 
 1. Users onboard their data onto Lagrange Platform
 2. Users click Generate dataNFT button on frontend
-3. Backend will generate NFT metadata
-4. Frontend will call smart contract function to create dataNFT
+3. Frontend will call smart contract function to create dataNFT
    1. User will sign the transaction on MetaMask
-5. Backend will scan network for the transaction
-6. frontend displays information about the dataNFT
+   2. DON will generate metadata and upload to IPFS
+   3. DON returns CID to contract
+   4. contract deploys new Data NFT contract
+4. Backend will scan network for the transaction
+5. Frontend displays information about the dataNFT
 
 ## Technologies Used 🛠
 
 - The frontend was written in Vue.js
 - The backend was written in Python
-- The Data NFTs are implemented using the ERC721 standard. Built on top of the widely-used OpenZeppelin contract library and deployed on the Filecoin Hyperspace Testnet, utilizing FEVM technology.
+- The Data NFTs are implemented using the ERC721 standard. Built on top of the widely-used OpenZeppelin contract library and implements the beta Chainlink Functions, deployed on the Sepolia Testnet
 
-  - DataNFT Factory contract address: `0x93C2aB6d92b3d40DEcf3eaFEA2B8b539EE78738e`
+  - DataNFT Factory contract address: `0x70bc8584313e2A854A321e68F6854ec767D69131`
 
 <!--
 ## Deploying Contracts 📜
@@ -81,12 +84,6 @@ Then run the script to create an example Data NFT:
 ```bash
 node scripts/createDataNft.js
 ``` -->
-
-## Future Enhancements: 🔮
-
-We want to allow users to sub-license their data assets to other wallet addresses, effectively giving those users permission to access the asset according to the terms in the sub-license. Different sub-licenses would define different usage and duration.
-
-In the future we plan to integrate Chainlink Functions into our contracts to setup Lagrange DAO to be a data validator. We want to make sure users own the data they are minting as dataNFTs.
 
 ## Contributing 🤝
 
