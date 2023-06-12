@@ -5,8 +5,10 @@
     "hardhat": "^2.14.0"
   },
   "dependencies": {
+    "@chainlink/contracts": "^0.6.1",
     "@openzeppelin/contracts": "^4.8.3",
     "@openzeppelin/contracts-upgradeable": "^4.8.3",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "eth-crypto": "^2.6.0"
   }
 }

@@ -14,10 +14,21 @@ module.exports = {
     },
   },
   networks: {
+    sepolia: {
+      url: 'https://rpc2.sepolia.org',
+      accounts: [process.env.PRIVATE_KEY],
+      oracle: '0x649a2C205BE7A3d5e99206CEEFF30c794f0E31EC',
+      subid: process.env.SEPOLIA_SUB_ID,
+    },
     hyperspace: {
       chainId: 3141,
       url: 'https://api.hyperspace.node.glif.io/rpc/v1',
       accounts: [process.env.PRIVATE_KEY],
+    },
+  },
+  etherscan: {
+    apiKey: {
+      sepolia: process.env.ETHERSCAN_API_KEY,
     },
   },
 }

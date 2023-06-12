@@ -17,6 +17,7 @@ contract DataNFT is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeabl
 
     mapping(uint => address) public idToDataToken;
     event DeployDataToken(uint tokenId, address dataTokenAddress);
+    event CreateLicense(uint tokenId, address recipient, string uri);
 
     // owner and factory are admins
     modifier onlyAdmin {
@@ -38,19 +39,21 @@ contract DataNFT is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeabl
         factory = msg.sender;
         transferOwnership(owner);
 
-        mint(owner, uri);
+        createLicense(owner, uri);
     }
 
     /**
      * @notice creates a new version for the dataset, sub-licensed to recipient
      * @param recipient - sub-licensee
      */
-    function mint(address recipient, string memory uri) public onlyAdmin {
+    function createLicense(address recipient, string memory uri) public onlyAdmin {
         _tokenIdCounter.increment();
         uint256 tokenId = _tokenIdCounter.current();
 
         _safeMint(recipient, tokenId);
         _setTokenURI(tokenId, uri);
+
+        emit CreateLicense(tokenId, recipient, uri);
     }
 
     /**
