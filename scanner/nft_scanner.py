@@ -2,7 +2,7 @@ import time
 
 from web3 import Web3
 from web3.middleware import geth_poa_middleware
-from model.nft_factory_data import update_last_scan_block, find_all_chain_list, \
+from scanner.model.nft_factory_data import update_last_scan_block, find_all_chain_list, \
     insert_dataset_nft_transaction
 import json
 import logging
@@ -22,7 +22,7 @@ session = getDb()
 class NFTFactoryScanner:
     def __init__(self, chain_info):
         self.nft_factory_contract_address = chain_info.factory_contract_address
-        self.nft_factory_abi_file_path = '../contracts/abi/DataNFTFactory.json'
+        self.nft_factory_abi_file_path = './contracts/abi/DataNFTFactory.json'
         self.session = session
         self.w3 = Web3(Web3.HTTPProvider(chain_info.rpc_url))
         self.w3.middleware_onion.inject(geth_poa_middleware, layer=0)
@@ -47,15 +47,15 @@ class NFTFactoryScanner:
                                                                                         toBlock=to_block)
 
             if create_data_nft_events:
-                for even in create_data_nft_events:
-                    print(even)
+                for event in create_data_nft_events:
+                    print(event)
                     insert_dataset_nft_transaction(session,
                                                    self.chain_ID,
-                                                   even.args.datasetName,
-                                                   even.args.dataNFTAddress,
-                                                   even.args.owner,
-                                                   even.transactionHash.hex(),
-                                                   even.address
+                                                   event.args.datasetName,
+                                                   event.args.dataNFTAddress,
+                                                   event.args.owner,
+                                                   event.transactionHash.hex(),
+                                                   event.address
                                                    )
             update_last_scan_block(session, self.chain_ID, to_block)
             self.from_block = self.from_block + self.batch_size + 1
