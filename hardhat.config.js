@@ -29,11 +29,16 @@ module.exports = {
       url: process.env.MUMBAI_RPC,
       accounts: [process.env.PRIVATE_KEY],
     },
+    polygon: {
+      url: process.env.POLYGON_RPC,
+      accounts: [process.env.PRIVATE_KEY],
+    },
   },
   etherscan: {
     apiKey: {
       sepolia: process.env.ETHERSCAN_API_KEY,
       polygonMumbai: process.env.POLYGONSCAN_API_KEY,
+      polygon: process.env.POLYGONSCAN_API_KEY,
     },
   },
 }
