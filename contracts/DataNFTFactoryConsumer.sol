@@ -49,24 +49,21 @@ contract DataNFTFactoryConsumer is
         setChainlinkToken(linkTokenAddress);
         setChainlinkOracle(_oracleAddress);
         oracleAddress = _oracleAddress;
-        jobId = '7da2702f37fd48e5b1b9a5715e3509b6';
+        jobId = '7d80a6386ef543a3abb52817f6707e3b';
         fee = _fee; // 0,1 * 10**18 (Varies by network and job)
 
         implementation = address(new DataNFT());
     }
 
-    function requestDataNFT(string memory datasetName) public returns (bytes32 requestId) {
+    function requestDataNFT(string memory datasetName, string memory ipfs_url) public returns (bytes32 requestId) {
         Chainlink.Request memory req = buildChainlinkRequest(
             jobId,
             address(this),
             this.fulfill.selector
         );
 
-        string memory urlWithAddress = concat(concat(baseUrl, addressToString(msg.sender)), "/");
-        string memory urlWithDataset = concat(concat(urlWithAddress, datasetName), "/'");
-        string memory requestUrl = concat(urlWithDataset, "generate_metadata");
-
-        req.add("post", requestUrl);
+        req.add("get", ipfs_url);
+        req.add("path", "name");
         // req.add("Bearer");
 
 
@@ -75,25 +72,25 @@ contract DataNFTFactoryConsumer is
         RequestData storage data = requestData[msg.sender][datasetName];
         data.requestor = msg.sender;
         data.datasetName = datasetName;
+        data.uri = ipfs_url;
 
         return assignedReqID;
     }
 
     function fulfill(
         bytes32 requestId,
-        bytes memory uriBytes
+        string memory nameFromMetadata
     ) public recordChainlinkFulfillment(requestId) {
         RequestArguements memory args = idToArgs[requestId];
         RequestData storage data = requestData[args.requestor][args.datasetName];
 
         data.fulfilled = true;
 
-        if (uriBytes.length > 0) {
-            data.uri = string(uriBytes);
+        if (keccak256(bytes(data.datasetName)) == keccak256(bytes(nameFromMetadata))) {
             data.claimable = true;
         }
 
-        emit OracleResult(requestId, string(uriBytes));
+        emit OracleResult(requestId, nameFromMetadata);
     }
 
     function claimDataNFT(string memory datasetName) public {
@@ -104,26 +101,6 @@ contract DataNFTFactoryConsumer is
 
         dataNFTAddresses[data.requestor][data.datasetName] = clone;
         emit CreateDataNFT(data.requestor, data.datasetName, clone);
-    }
-
-    function concat(string memory a, string memory b) public pure returns (string memory) {
-        return string(abi.encodePacked(a, b));
-    }
-
-    function addressToString(
-        address _address
-    ) public pure returns (string memory) {
-        bytes20 _bytes = bytes20(_address);
-        bytes16 _hexAlphabet = "0123456789abcdef";
-        bytes memory _stringBytes = new bytes(42);
-        _stringBytes[0] = "0";
-        _stringBytes[1] = "x";
-        for (uint i = 0; i < 20; i++) {
-            uint _byte = uint8(_bytes[i]);
-            _stringBytes[2 + i * 2] = _hexAlphabet[_byte >> 4];
-            _stringBytes[3 + i * 2] = _hexAlphabet[_byte & 0x0f];
-        }
-        return string(_stringBytes);
     }
 
     function updateOracleAddress(address oracle) public onlyOwner {
