@@ -49,7 +49,7 @@ contract DataNFTFactoryConsumer is
         setChainlinkToken(linkTokenAddress);
         setChainlinkOracle(_oracleAddress);
         oracleAddress = _oracleAddress;
-        jobId = '7da2702f37fd48e5b1b9a5715e3509b6';
+        jobId = 'fb6846302d324792955cb3623f636088';
         fee = _fee; // 0,1 * 10**18 (Varies by network and job)
 
         implementation = address(new DataNFT());
@@ -65,9 +65,11 @@ contract DataNFTFactoryConsumer is
         string memory urlWithAddress = concat(concat(baseUrl, addressToString(msg.sender)), "/");
         string memory urlWithDataset = concat(concat(urlWithAddress, datasetName), "/'");
         string memory requestUrl = concat(urlWithDataset, "generate_metadata");
+        string memory x = concat('{"url":"', requestUrl);
+        string memory y = concat(x, '", "headers": [{ "name": "Authorization", "value": "Bearer ');
+        string memory z = concat(concat(y, secret), '"} ]}');
 
-        req.add("post", requestUrl);
-        // req.add("Bearer");
+        req.add("requestData", z);
 
 
         bytes32 assignedReqID = sendChainlinkRequest(req, fee);
