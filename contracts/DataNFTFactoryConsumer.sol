@@ -40,17 +40,14 @@ contract DataNFTFactoryConsumer is
 
     event OracleResult(bytes32 indexed requestId, string uri);
     event CreateDataNFT(address indexed owner, string datasetName, address dataNFTAddress);
+    event RequestDataSent (string request);
 
-    constructor(
-        address linkTokenAddress,
-        address _oracleAddress,
-        uint _fee
-    ) {
-        setChainlinkToken(linkTokenAddress);
-        setChainlinkOracle(_oracleAddress);
-        oracleAddress = _oracleAddress;
+    constructor() {
+        setChainlinkToken(0x326C977E6efc84E512bB9C30f76E30c160eD06FB);
+        setChainlinkOracle(0x12A3d7759F745f4cb8EE8a647038c040cB8862A5);
+        oracleAddress = 0x12A3d7759F745f4cb8EE8a647038c040cB8862A5;
         jobId = 'fb6846302d324792955cb3623f636088';
-        fee = _fee; // 0,1 * 10**18 (Varies by network and job)
+        fee = 0.1 ether; // 0,1 * 10**18 (Varies by network and job)
 
         implementation = address(new DataNFT());
     }
@@ -65,9 +62,9 @@ contract DataNFTFactoryConsumer is
         string memory urlWithAddress = concat(concat(baseUrl, addressToString(msg.sender)), "/");
         string memory urlWithDataset = concat(concat(urlWithAddress, datasetName), "/'");
         string memory requestUrl = concat(urlWithDataset, "generate_metadata");
-        string memory x = concat('{"url":"', requestUrl);
-        string memory y = concat(x, '", "headers": [{ "name": "Authorization", "value": "Bearer ');
-        string memory z = concat(concat(y, secret), '"} ]}');
+        string memory x = concat('{\"url\":\"', requestUrl);
+        string memory y = concat(x, '\", \"headers\": [{ \"name\": \"Authorization\", \"value\": \"Bearer ');
+        string memory z = concat(concat(y, secret), '\"} ]}');
 
         req.add("requestData", z);
 
@@ -77,6 +74,8 @@ contract DataNFTFactoryConsumer is
         RequestData storage data = requestData[msg.sender][datasetName];
         data.requestor = msg.sender;
         data.datasetName = datasetName;
+
+        emit RequestDataSent(z);
 
         return assignedReqID;
     }
