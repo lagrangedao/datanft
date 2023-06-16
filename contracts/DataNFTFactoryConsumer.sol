@@ -12,8 +12,8 @@ contract DataNFTFactoryConsumer is
 {
     using Chainlink for Chainlink.Request;
 
-    bytes32 private jobId;
-    uint256 private fee;
+    bytes32 public jobId;
+    uint256 public fee;
     address public oracleAddress;
 
     string public baseUrl = "https://api.lagrangedao.org/datasets/";
@@ -42,15 +42,12 @@ contract DataNFTFactoryConsumer is
     event CreateDataNFT(address indexed owner, string datasetName, address dataNFTAddress);
 
     constructor(
-        address linkTokenAddress,
-        address _oracleAddress,
-        uint _fee
     ) {
-        setChainlinkToken(linkTokenAddress);
-        setChainlinkOracle(_oracleAddress);
-        oracleAddress = _oracleAddress;
-        jobId = '7d80a6386ef543a3abb52817f6707e3b';
-        fee = _fee; // 0,1 * 10**18 (Varies by network and job)
+        setChainlinkToken(0xb0897686c545045aFc77CF20eC7A532E3120E0F1);
+        setChainlinkOracle(0x188b71C9d27cDeE01B9b0dfF5C1aff62E8D6F434);
+        oracleAddress = 0x188b71C9d27cDeE01B9b0dfF5C1aff62E8D6F434;
+        jobId = "a84b561bd8f64300a0832682f208321f";
+        fee = 0.1 ether; // 0,1 * 10**18 (Varies by network and job)
 
         implementation = address(new DataNFT());
     }
@@ -79,7 +76,7 @@ contract DataNFTFactoryConsumer is
 
     function fulfill(
         bytes32 requestId,
-        string memory nameFromMetadata
+        bytes memory nameFromMetadata
     ) public recordChainlinkFulfillment(requestId) {
         RequestArguements memory args = idToArgs[requestId];
         RequestData storage data = requestData[args.requestor][args.datasetName];
@@ -90,7 +87,7 @@ contract DataNFTFactoryConsumer is
             data.claimable = true;
         }
 
-        emit OracleResult(requestId, nameFromMetadata);
+        emit OracleResult(requestId, string(nameFromMetadata));
     }
 
     function claimDataNFT(string memory datasetName) public {
