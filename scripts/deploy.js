@@ -10,8 +10,8 @@ async function main() {
   const sepoliaOracle = network.config.oracle
 
   console.log('deploying...')
-  const nftFactory = await ethers.getContractFactory('DataNFTFactory')
-  const nftContract = await nftFactory.deploy(sepoliaOracle, subID, source)
+  const nftFactory = await ethers.getContractFactory('DataNFTFactoryConsumer')
+  const nftContract = await nftFactory.deploy({ nonce: 1 })
 
   console.log('address: ' + nftContract.address)
   await nftContract.deployed()
@@ -24,7 +24,7 @@ async function main() {
   console.log('verifying...')
   await hre.run('verify:verify', {
     address: nftContract.address,
-    constructorArguments: [sepoliaOracle, subID, source],
+    constructorArguments: [],
   })
 }
 

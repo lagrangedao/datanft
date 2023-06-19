@@ -15,9 +15,9 @@ module.exports = {
   },
   networks: {
     sepolia: {
-      url: 'https://rpc2.sepolia.org',
+      url: 'https://eth-sepolia-public.unifra.io',
       accounts: [process.env.PRIVATE_KEY],
-      oracle: '0x649a2C205BE7A3d5e99206CEEFF30c794f0E31EC',
+      //oracle: '0x649a2C205BE7A3d5e99206CEEFF30c794f0E31EC',
       subid: process.env.SEPOLIA_SUB_ID,
     },
     hyperspace: {

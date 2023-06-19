@@ -38,16 +38,16 @@ contract DataNFTFactoryConsumer is
     mapping(address => mapping(string => RequestData)) public requestData;
     mapping(address => mapping(string => address)) public dataNFTAddresses;
 
-    event OracleResult(bytes32 indexed requestId, string uri);
+    event OracleResult(bytes32 indexed requestId, string datasetName);
     event CreateDataNFT(address indexed owner, string datasetName, address dataNFTAddress);
 
     constructor(
     ) {
-        setChainlinkToken(0xb0897686c545045aFc77CF20eC7A532E3120E0F1);
-        setChainlinkOracle(0x188b71C9d27cDeE01B9b0dfF5C1aff62E8D6F434);
-        oracleAddress = 0x188b71C9d27cDeE01B9b0dfF5C1aff62E8D6F434;
-        jobId = "a84b561bd8f64300a0832682f208321f";
-        fee = 0.1 ether; // 0,1 * 10**18 (Varies by network and job)
+        setChainlinkToken(0x779877A7B0D9E8603169DdbD7836e478b4624789);
+        setChainlinkOracle(0x6090149792dAAeE9D1D568c9f9a6F6B46AA29eFD);
+        oracleAddress = 0x6090149792dAAeE9D1D568c9f9a6F6B46AA29eFD;
+        jobId = "7d80a6386ef543a3abb52817f6707e3b";
+        fee = 0.10 ether; 
 
         implementation = address(new DataNFT());
     }
@@ -70,13 +70,15 @@ contract DataNFTFactoryConsumer is
         data.requestor = msg.sender;
         data.datasetName = datasetName;
         data.uri = ipfs_url;
+        data.fulfilled = false;
+        data.claimable = false;
 
         return assignedReqID;
     }
 
     function fulfill(
         bytes32 requestId,
-        bytes memory nameFromMetadata
+        string memory nameFromMetadata
     ) public recordChainlinkFulfillment(requestId) {
         RequestArguements memory args = idToArgs[requestId];
         RequestData storage data = requestData[args.requestor][args.datasetName];
@@ -102,6 +104,7 @@ contract DataNFTFactoryConsumer is
 
     function updateOracleAddress(address oracle) public onlyOwner {
         oracleAddress = oracle;
+        setChainlinkOracle(oracle);
     }
 
     function updateJobId(bytes32 job) public onlyOwner {
@@ -116,10 +119,22 @@ contract DataNFTFactoryConsumer is
         secret = newSecret;
     }
 
+    function updateChainlinkToken(address token) public onlyOwner {
+        setChainlinkToken(token);
+    }
+
     function withdrawLink() public onlyOwner {
         LinkTokenInterface link = LinkTokenInterface(chainlinkTokenAddress());
         require(
             link.transfer(msg.sender, link.balanceOf(address(this))),
+            "Unable to transfer"
+        );
+    }
+
+    function withdraw(address tokenAddress) public onlyOwner {
+        LinkTokenInterface token = LinkTokenInterface(tokenAddress);
+        require(
+            token.transfer(msg.sender, token.balanceOf(address(this))),
             "Unable to transfer"
         );
     }
