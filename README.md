@@ -19,13 +19,13 @@ sequenceDiagram;
   participant User
   participant Lagrange Platform
   participant Smart Contract
-  participant DON
+  participant Chainlink Oracle
     User->>Lagrange Platform: 1. Upload data asset;
     User->>Lagrange Platform: 2. Request DataNFT Generation
-    Lagrange Platform->>Smart Contract: 3. claimDataNFT(datasetName, metadataUri)
-    Smart Contract->>DON: 4. Generate Metadata on IPFS
-    DON->>Smart Contract: 5. Returns CID
-    Smart Contract->>Smart Contract: 6. Creates New Data NFT
+    Lagrange Platform->>Lagrange Platform: 3. Generate Metadata on IPFS
+    Lagrange Platform->>Smart Contract: 4. claimDataNFT(datasetName, metadataUri)
+    Lagrange Platform->>Chainlink Oracle: 5. Verify Data with Lagrange API
+    Smart Contract->>User: 6. Creates New Data NFT
 ```
 
 1. Users onboard their data onto Lagrange Platform
@@ -42,48 +42,9 @@ sequenceDiagram;
 
 - The frontend was written in Vue.js
 - The backend was written in Python
-- The Data NFTs are implemented using the ERC721 standard. Built on top of the widely-used OpenZeppelin contract library and implements the beta Chainlink Functions, deployed on the Sepolia Testnet
+- The Data NFTs are implemented using the ERC721 standard. Built on top of the OpenZeppelin contract library and implement the ChainlinkClient library. In the future we plan to migrate to Chainlink Functions, which is currently in BETA.
 
-  - DataNFT Factory contract address: `0x70bc8584313e2A854A321e68F6854ec767D69131`
-
-<!--
-## Deploying Contracts 📜
-
-For those interested on deploying their own DataNFTFactory contract:
-
-Clone the repository:
-
-```bash
-git clone https://github.com/lagrangedao/datanft
-cd datanft
-
-npm install
-```
-
-Create a .env file with your private key:
-
-```python
-# datanft/.env
-PRIVATE_KEY="..."
-```
-
-Deploy the contract to FEVM Hyperspace:
-
-```bash
-npx hardhat run scripts/deploy.js --network hyperspace
-```
-
-Add the outputted address into `scripts/claimDataNft.js`.
-
-```js
-const FACTORY_ADDRESS = '0x...'
-```
-
-Then run the script to create an example Data NFT:
-
-```bash
-node scripts/createDataNft.js
-``` -->
+  - DataNFT Factory contract address: `0xb7545455111a1cf7Cde72E8816bf21274D88aa81`
 
 ## Contributing 🤝
 
