@@ -12,8 +12,8 @@ contract DataNFTFactoryConsumer is
 {
     using Chainlink for Chainlink.Request;
 
-    bytes32 private jobId;
-    uint256 private fee;
+    bytes32 public jobId;
+    uint256 public fee;
     address public oracleAddress;
 
     string public baseUrl = "https://api.lagrangedao.org/datasets/";
@@ -40,12 +40,11 @@ contract DataNFTFactoryConsumer is
 
     event OracleResult(bytes32 indexed requestId, string uri);
     event CreateDataNFT(address indexed owner, string datasetName, address dataNFTAddress);
-    event RequestDataSent (string request);
-
+    
     constructor() {
-        setChainlinkToken(0x326C977E6efc84E512bB9C30f76E30c160eD06FB);
-        setChainlinkOracle(0x12A3d7759F745f4cb8EE8a647038c040cB8862A5);
-        oracleAddress = 0x12A3d7759F745f4cb8EE8a647038c040cB8862A5;
+        setChainlinkToken(0xb0897686c545045aFc77CF20eC7A532E3120E0F1);
+        setChainlinkOracle(0x9F306bB9da1a12bF1590d3EA65e038fC414d6b68);
+        oracleAddress = 0x9F306bB9da1a12bF1590d3EA65e038fC414d6b68;
         jobId = 'fb6846302d324792955cb3623f636088';
         fee = 0.1 ether; // 0,1 * 10**18 (Varies by network and job)
 
@@ -60,13 +59,13 @@ contract DataNFTFactoryConsumer is
         );
 
         string memory urlWithAddress = concat(concat(baseUrl, addressToString(msg.sender)), "/");
-        string memory urlWithDataset = concat(concat(urlWithAddress, datasetName), "/'");
-        string memory requestUrl = concat(urlWithDataset, "generate_metadata");
-        string memory x = concat('{\"url\":\"', requestUrl);
-        string memory y = concat(x, '\", \"headers\": [{ \"name\": \"Authorization\", \"value\": \"Bearer ');
-        string memory z = concat(concat(y, secret), '\"} ]}');
+        string memory urlWithDataset = concat(concat(urlWithAddress, datasetName), "/");
+        string memory requestUrl = concat('{\"url\":\"', concat(urlWithDataset, "generate_metadata"));
+        string memory withHeaders = concat(requestUrl, '\", \"headers\": [{ \"name\": \"Authorization\", \"value\": \"Bearer ');
+        string memory fullRequest = concat(concat(withHeaders, secret), '\"} ]}');
 
-        req.add("requestData", z);
+        req.add("requestData", fullRequest);
+        req.add("path", "ipfs_url");
 
 
         bytes32 assignedReqID = sendChainlinkRequest(req, fee);
@@ -74,8 +73,8 @@ contract DataNFTFactoryConsumer is
         RequestData storage data = requestData[msg.sender][datasetName];
         data.requestor = msg.sender;
         data.datasetName = datasetName;
-
-        emit RequestDataSent(z);
+        data.fulfilled = false;
+        data.claimable = false;
 
         return assignedReqID;
     }
@@ -129,6 +128,11 @@ contract DataNFTFactoryConsumer is
 
     function updateOracleAddress(address oracle) public onlyOwner {
         oracleAddress = oracle;
+        setChainlinkOracle(oracle);
+    }
+
+    function updateChainlinkToken(address token) public onlyOwner {
+        setChainlinkToken(token);
     }
 
     function updateJobId(bytes32 job) public onlyOwner {
@@ -147,6 +151,14 @@ contract DataNFTFactoryConsumer is
         LinkTokenInterface link = LinkTokenInterface(chainlinkTokenAddress());
         require(
             link.transfer(msg.sender, link.balanceOf(address(this))),
+            "Unable to transfer"
+        );
+    }
+
+    function withdraw(address tokenAddress) public onlyOwner {
+        LinkTokenInterface token = LinkTokenInterface(tokenAddress);
+        require(
+            token.transfer(msg.sender, token.balanceOf(address(this))),
             "Unable to transfer"
         );
     }
