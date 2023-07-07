@@ -15,7 +15,7 @@ module.exports = {
   },
   networks: {
     sepolia: {
-      url: 'https://rpc2.sepolia.org',
+      url: 'https://eth-sepolia-public.unifra.io',
       accounts: [process.env.PRIVATE_KEY],
       oracle: '0x649a2C205BE7A3d5e99206CEEFF30c794f0E31EC',
       subid: process.env.SEPOLIA_SUB_ID,
@@ -25,10 +25,25 @@ module.exports = {
       url: 'https://api.hyperspace.node.glif.io/rpc/v1',
       accounts: [process.env.PRIVATE_KEY],
     },
+    mumbai: {
+      url: 'https://rpc-mumbai.maticvigil.com',
+      accounts: [process.env.PRIVATE_KEY],
+    },
+    polygon: {
+      url: process.env.POLYGON_RPC,
+      accounts: [process.env.PRIVATE_KEY],
+    },
+    tbnc: {
+      url: 'https://bsc-testnet.publicnode.com',
+      accounts: [process.env.PRIVATE_KEY],
+    },
   },
   etherscan: {
     apiKey: {
       sepolia: process.env.ETHERSCAN_API_KEY,
+      polygonMumbai: process.env.POLYGONSCAN_API_KEY,
+      polygon: process.env.POLYGONSCAN_API_KEY,
+      bscTestnet: process.env.BSCSCAN_API_KEY,
     },
   },
 }
