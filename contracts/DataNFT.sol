@@ -39,7 +39,7 @@ contract DataNFT is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeabl
         factory = msg.sender;
         transferOwnership(owner);
 
-        createLicense(owner, uri);
+        setContractUri(uri);
     }
 
     /**

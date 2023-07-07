@@ -14,12 +14,10 @@ contract DataNFTFactoryConsumer is
 
     bytes32 public jobId;
     uint256 public fee;
-    address public oracleAddress;
 
-    string public baseUrl = "https://api.lagrangedao.org/datasets/";
+    string public baseUrl = "https://api.lagrangedao.org/spaces/";
 
     address private implementation;
-    string private secret;
 
     struct RequestData {
         address requestor;
@@ -44,7 +42,6 @@ contract DataNFTFactoryConsumer is
     constructor() {
         setChainlinkToken(0xb0897686c545045aFc77CF20eC7A532E3120E0F1);
         setChainlinkOracle(0x9F306bB9da1a12bF1590d3EA65e038fC414d6b68);
-        oracleAddress = 0x9F306bB9da1a12bF1590d3EA65e038fC414d6b68;
         jobId = 'fb6846302d324792955cb3623f636088';
         fee = 0.1 ether; // 0,1 * 10**18 (Varies by network and job)
 
@@ -58,15 +55,12 @@ contract DataNFTFactoryConsumer is
             this.fulfill.selector
         );
 
+        // BUILD URL
         string memory urlWithAddress = concat(concat(baseUrl, addressToString(msg.sender)), "/");
-        string memory urlWithDataset = concat(concat(urlWithAddress, datasetName), "/");
-        string memory requestUrl = concat('{\"url\":\"', concat(urlWithDataset, "generate_metadata"));
-        string memory withHeaders = concat(requestUrl, '\", \"headers\": [{ \"name\": \"Authorization\", \"value\": \"Bearer ');
-        string memory fullRequest = concat(concat(withHeaders, secret), '\"} ]}');
+        string memory urlWithDataset = concat(concat(urlWithAddress, datasetName), "/generate_metadata");
 
-        req.add("requestData", fullRequest);
-        req.add("path", "ipfs_url");
-
+        req.add("url", urlWithDataset);
+        req.add("path", "data,metadata_cid");
 
         bytes32 assignedReqID = sendChainlinkRequest(req, fee);
         idToArgs[assignedReqID] = RequestArguements(msg.sender, datasetName);
@@ -126,25 +120,29 @@ contract DataNFTFactoryConsumer is
         return string(_stringBytes);
     }
 
-    function updateOracleAddress(address oracle) public onlyOwner {
-        oracleAddress = oracle;
+    function setOracleAddress(address oracle) public onlyOwner {
         setChainlinkOracle(oracle);
     }
 
-    function updateChainlinkToken(address token) public onlyOwner {
+    function getOracle() public view returns (address) {
+        return chainlinkOracleAddress();
+    }
+
+    function setLinkToken(address token) public onlyOwner {
         setChainlinkToken(token);
     }
 
-    function updateJobId(bytes32 job) public onlyOwner {
+
+    function setJobId(bytes32 job) public onlyOwner {
         jobId = job;
     }
 
-    function updateFee(uint _fee) public onlyOwner {
+    function setFee(uint _fee) public onlyOwner {
         fee = _fee;
     }
 
-    function updateSecret(string memory newSecret) public onlyOwner {
-        secret = newSecret;
+    function setBaseUrl(string memory url) public onlyOwner {
+        baseUrl = url;
     }
 
     function withdrawLink() public onlyOwner {
@@ -162,5 +160,4 @@ contract DataNFTFactoryConsumer is
             "Unable to transfer"
         );
     }
-
 } 

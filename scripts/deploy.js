@@ -26,8 +26,6 @@ async function main() {
     address: nftContract.address,
     // constructorArguments: [sepoliaOracle, subID, source],
   })
-
-  await nftContract.updateSecret('0FYwqRcQZ6')
 }
 
 main()
