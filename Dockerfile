@@ -7,3 +7,4 @@ RUN pip install --upgrade pip
 RUN pip install -r /app/scanner/requirements.txt
 
 ENV PYTHONPATH "${PYTHONPATH}:/app"
+CMD ["python", "scanner/app.py"]
