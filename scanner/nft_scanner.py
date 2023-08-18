@@ -5,7 +5,7 @@ from web3.middleware import geth_poa_middleware
 from scanner.model.nft_factory_data import update_last_scan_block, find_all_chain_list, \
     insert_dataset_nft_transaction
 import json
-import logging
+import logging, traceback
 from scanner.model import getDb
 
 # set up logging to file
@@ -65,9 +65,13 @@ class NFTFactoryScanner:
 def scan_chain():
     all_chain = find_all_chain_list(session)
     for chain_info in all_chain:
-        scanner_obj = NFTFactoryScanner(chain_info)
-        target_block = scanner_obj.w3.eth.get_block('latest')
-        scanner_obj.start_NFT_scan(target_block.number)
+        try:
+            scanner_obj = NFTFactoryScanner(chain_info)
+            target_block = scanner_obj.w3.eth.get_block('latest')
+            scanner_obj.start_NFT_scan(target_block.number)
+        except Exception as e:
+            logging.error(str(e) + '\n' + traceback.format_exc())
+            continue
 
 
 if __name__ == '__main__':
