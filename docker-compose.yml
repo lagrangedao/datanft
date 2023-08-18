@@ -1,0 +1,5 @@
+version: "3.8"
+services:
+  nft_scanner:
+    build: .
+    command: python ./scanner/app.py
