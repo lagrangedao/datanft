@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from scanner.model.nft_factory_data import get_nft_factory_transactions
 from scanner import getConfig
 from scanner.model import getDb
@@ -25,15 +25,25 @@ def get_factory_details():
     print(transaction_hash, chain_id)
     result = get_nft_factory_transactions(session, chain_id, transaction_hash)
     if result:
-        return {'chain_id': result.chain_id,
-                'dataset_name': result.dataset_name,
-                'dataNFTAddress': result.data_NFT_address,
-                'owner': result.owner,
-                'transaction_hash': result.transaction_hash,
-                'contract_address': result.contract_address
-                }
+        data = {
+            'chain_id': result.chain_id,
+            'dataset_name': result.dataset_name,
+            'dataNFTAddress': result.data_NFT_address,
+            'owner': result.owner,
+            'transaction_hash': result.transaction_hash,
+            'contract_address': result.contract_address
+            }
+        response = {
+            "message": "success",
+            "data": data
+        }
+        return jsonify(response), 200
     else:
-        return 'NFT Factory record not found'
+        response = {
+            "message": "NFT Factory record not found",
+            "data": None
+        }
+        return jsonify('NFT Factory record not found')
 
 
 if __name__ == '__main__':
