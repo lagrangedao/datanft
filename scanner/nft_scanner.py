@@ -39,7 +39,7 @@ class NFTFactoryScanner:
             if block_diff < self.batch_size:
                 self.batch_size = block_diff
             to_block = self.from_block + self.batch_size
-            logging.info(f"scanning from {self.from_block} to {to_block}")
+            logging.info(f"scanning for chain id: {self.chain_ID}, from {self.from_block} to {to_block}")
             nft_factory_contract = self.w3.eth.contract(
                 address=Web3.to_checksum_address(self.nft_factory_contract_address), abi=self.nft_factory_abi)
 
