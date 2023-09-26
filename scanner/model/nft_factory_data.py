@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Boolean
 from scanner.model import Base
 
 
@@ -23,11 +23,12 @@ class FactoryContractDetails(Base):
     factory_contract_address = Column(String)
     owner = Column(String)
     rpc_url = Column(String)
+    is_deleted = Column(Boolean, nullable=True, default=False)
 
 
 def find_all_chain_list(session):
     try:
-        chain_list = session.query(FactoryContractDetails).all()
+        chain_list = session.query(FactoryContractDetails).filter(FactoryContractDetails.is_deleted == False).all()
         return chain_list
     except Exception as e:
         print("Error fetching the chain list: ", e)
