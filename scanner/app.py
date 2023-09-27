@@ -43,7 +43,7 @@ def get_factory_details():
             "message": "NFT Factory record not found",
             "data": None
         }
-        return jsonify('NFT Factory record not found')
+        return jsonify(response), 200
 
 
 if __name__ == '__main__':
