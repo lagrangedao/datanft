@@ -88,7 +88,7 @@ node scripts/createDataNft.js
 ## Award
 This project is arwarded the 1st place of NFTs and Gaming category ($15,000)Chainlink Spring 2023 Hackathon 
 [Announcing the Chainlink Spring 2023 Hackathon Winner](https://blog.chain.link/spring-2023-hackathon-winners)
-<img src="[chainlink.png](https://blog.chain.link/)" width="200">
+<img src="https://cdn.prod.website-files.com/5f6b7190899f41fb70882d08/66560dd6ed44f1b79c527842_brand-logo-blue.svg" width="200">
 
 ## Contributing 🤝
 
