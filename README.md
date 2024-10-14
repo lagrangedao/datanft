@@ -1,7 +1,7 @@
 # DataNFT for Dataset Licensing
 DataNFT for Dataset Licensing is a platform that allows dataset owners to tokenize their datasets uploaded on the Lagrange Platform and grant access to others users via NFTs. It utilizes blockchain technology to validate ownership and access rights, ensuring a secure and transparent ecosystem.
 
-[![Data NFT](https://markdown-videos-api.jorgenkh.no/url?url=https://youtu.be/dAIiY5dw-6c)](https://youtu.be/dAIiY5dw-6c)
+[![Data NFT](https://markdown-videos-api.jorgenkh.no/url?url=https://youtu.be/vtSgHY9K9Vo)](https://youtu.be/vtSgHY9K9Vo)
 
 
 ## What is a Data NFT? 🤔
