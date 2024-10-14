@@ -19,12 +19,12 @@ sequenceDiagram;
   participant User
   participant Lagrange Platform
   participant Smart Contract
-  participant DON
+  participant Chainlink
     User->>Lagrange Platform: 1. Upload data asset;
     User->>Lagrange Platform: 2. Request DataNFT Generation
-    Lagrange Platform->>Smart Contract: 3. claimDataNFT(datasetName, metadataUri)
-    Smart Contract->>DON: 4. Generate Metadata on IPFS
-    DON->>Smart Contract: 5. Returns CID
+    Lagrange Platform->>Smart Contract: 3. claimDataNFT(datasetName)
+    Smart Contract->>Chainlink: 4. Generate Metadata on IPFS
+    Chainlink->>Smart Contract: 5. Returns CID
     Smart Contract->>Smart Contract: 6. Creates New Data NFT
 ```
 
@@ -32,58 +32,26 @@ sequenceDiagram;
 2. Users click Generate dataNFT button on frontend
 3. Frontend will call smart contract function to create dataNFT
    1. User will sign the transaction on MetaMask
-   2. DON will generate metadata and upload to IPFS
-   3. DON returns CID to contract
-   4. contract deploys new Data NFT contract
-4. Backend will scan network for the transaction
-5. Frontend displays information about the dataNFT
+   2. Chainlink Oracle will generate metadata and upload to IPFS
+   3. Chainlink Oracle returns CID to contract
+   4. Contract deploys new Data NFT contract
+4. Frontend displays information about the dataNFT
 
 ## Technologies Used 🛠
 
-- The frontend was written in Vue.js
-- The backend was written in Python
-- The Data NFTs are implemented using the ERC721 standard. Built on top of the widely-used OpenZeppelin contract library and implements the beta Chainlink Functions, deployed on the Sepolia Testnet
+The Lagrange Platform creates new Data NFTs via the DataNFTFactory contract.
 
-  - DataNFT Factory contract address: `0x70bc8584313e2A854A321e68F6854ec767D69131`
+The Data NFTs are implemented using the ERC721 standard. Built on top of the OpenZeppelin contract library and implement the ChainlinkClient library. In the future we plan to migrate to Chainlink Functions, which is currently in BETA.
 
-<!--
-## Deploying Contracts 📜
+## Contract Addresses 📜
 
-For those interested on deploying their own DataNFTFactory contract:
+Below are the contract addresses of the DataNFTFactory for each network. They are all using the same contract address!
 
-Clone the repository:
-
-```bash
-git clone https://github.com/lagrangedao/datanft
-cd datanft
-
-npm install
-```
-
-Create a .env file with your private key:
-
-```python
-# datanft/.env
-PRIVATE_KEY="..."
-```
-
-Deploy the contract to FEVM Hyperspace:
-
-```bash
-npx hardhat run scripts/deploy.js --network hyperspace
-```
-
-Add the outputted address into `scripts/claimDataNft.js`.
-
-```js
-const FACTORY_ADDRESS = '0x...'
-```
-
-Then run the script to create an example Data NFT:
-
-```bash
-node scripts/createDataNft.js
-``` -->
+| Network         | Address                                    |
+| --------------- | ------------------------------------------ |
+| Binance Testnet | 0xE74b3DC8B3935591003B79745DD6072ACE3e6dA7 |
+| Mumbai Testnet  | 0xE74b3DC8B3935591003B79745DD6072ACE3e6dA7 |
+| Polygon Mainnet | 0xE74b3DC8B3935591003B79745DD6072ACE3e6dA7 |
 
 ## Award
 This project is arwarded the 1st place of NFTs and Gaming category ($15,000) of Chainlink Spring 2023 Hackathon 
